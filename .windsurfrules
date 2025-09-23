@@ -1,0 +1,13 @@
+# MK Form Package - Cursor AI Rules
+
+## Project Overview
+
+This is a Laravel PHP package called "mk/form" that provides a powerful form backend system with fluent API, validation, and HTTP endpoints.
+
+## Code Style & Standards
+
+- **PHP Version**: 8.3+
+- **PSR Standards**: Follow PSR-4 autoloading, PSR-12 coding style
+- **Type Safety**: Always use strict types, type hints, and return types
+- **Laravel Conventions**: Follow Laravel naming and structure conventions
+- **Testing**: Write tests for all classes and methods.
