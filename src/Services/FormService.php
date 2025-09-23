@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mk\Form\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Mk\Form\Contracts\FormContract;
 
 /**
@@ -84,7 +85,7 @@ class FormService
      */
     public function validateFormSubmission(FormContract $form, array $data): array
     {
-        $validator = validator($data, $form->rules());
+        $validator = Validator::make($data, $form->rules());
 
         if ($validator->fails()) {
             return $validator->errors()->toArray();
@@ -96,9 +97,15 @@ class FormService
     /**
      * Process form submission.
      */
-    public function processFormSubmission(string $formName, Request $request): mixed
+    public function processFormSubmission(string $formName, mixed $request): mixed
     {
         $form = $this->getForm($formName);
+
+        // If request is an array, convert to Request object for validation
+        if (is_array($request)) {
+            // Create a fresh Request instance populated with the provided data
+            $request = Request::create('', 'POST', $request);
+        }
 
         // Validate the data
         $errors = $this->validateFormSubmission($form, $request->all());

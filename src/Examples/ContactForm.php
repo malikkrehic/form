@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mk\Form\Examples;
 
-use Illuminate\Http\Request;
 use Mk\Form\Form;
 use Mk\Form\Fields\TextInputField;
 use Mk\Form\Fields\TextareaField;
@@ -19,7 +18,7 @@ use Mk\Form\Fields\CheckboxField;
  */
 class ContactForm extends Form
 {
-    protected function configure(): void
+    public function configure(): void
     {
         $this->setTitle('Contact Us')
             ->setConfiguration([
@@ -73,7 +72,7 @@ class ContactForm extends Form
         ];
     }
 
-    public function handle(Request $request): array
+    public function handle(mixed $request): array
     {
         // Here you would typically:
         // 1. Validate the data (already done by the service)
@@ -81,18 +80,16 @@ class ContactForm extends Form
         // 3. Send emails
         // 4. Return success/error response
 
-        $data = $request->validated();
-
         // Example: Log the contact request
         \Log::info('Contact form submitted', [
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'subject' => $data['subject'],
-            'newsletter' => $data['newsletter'] ?? false,
+            'name' => $request['name'] ?? '',
+            'email' => $request['email'] ?? '',
+            'subject' => $request['subject'] ?? '',
+            'newsletter' => $request['newsletter'] ?? false,
         ]);
 
         // Example: Send notification email
-        // Mail::to('admin@example.com')->send(new ContactFormSubmitted($data));
+        // Mail::to('admin@example.com')->send(new ContactFormSubmitted($request));
 
         return [
             'success' => true,

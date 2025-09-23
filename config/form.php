@@ -60,10 +60,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Directories to scan for forms when auto_register is enabled.
+    | These paths will be resolved using Laravel's app_path() helper.
     |
     */
     'directories' => [
-        app_path('Forms'),
-        app_path('Http/Forms'),
+        'app/Forms', 
+        'app/Http/Forms',
     ],
 ];

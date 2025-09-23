@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a Laravel PHP package called "mk/form" that provides a powerful form backend system with fluent API, validation, and HTTP endpoints.
+This is a Laravel PHP package called "mk/form" that provides a powerful form backend system with fluent API, validation, and HTTP endpoints. It is separate package so keep in mind that it is not part of the main application and not all Laravel features are available.
 
 ## Code Style & Standards
 

@@ -6,6 +6,7 @@ namespace Mk\Form\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Routing\Controller;
 use Mk\Form\Services\FormService;
 
@@ -23,11 +24,11 @@ class FormController extends Controller
     /**
      * Get a list of all registered forms.
      */
-    public function list(): JsonResponse
+    public function index(): JsonResponse
     {
         $forms = $this->formService->getAllForms();
 
-        return response()->json([
+        return Response::json([
             'forms' => $forms,
             'count' => count($forms),
         ]);
@@ -40,12 +41,22 @@ class FormController extends Controller
     {
         try {
             $form = $this->formService->getForm($formName);
-            return response()->json($form->toArray());
+            return Response::json($form->toArray());
         } catch (\InvalidArgumentException $e) {
-            return response()->json([
+            return Response::json([
                 'error' => 'Form not found',
                 'message' => $e->getMessage(),
             ], 404);
         }
+    }
+
+    /**
+     * Submit a form.
+     */
+    public function submit(Request $request, string $formName): JsonResponse
+    {
+        $result = $this->formService->processFormSubmission($formName, $request);
+        $status = ($result['success'] ?? false) ? 200 : 422;
+        return Response::json($result, $status);
     }
 }

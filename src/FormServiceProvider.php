@@ -26,17 +26,29 @@ class FormServiceProvider extends ServiceProvider
 
         // Register the facade
         $this->app->alias(FormService::class, 'mk-form');
+
+        // Merge default package configuration in register per Laravel best practices
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/form.php', 'form'
+        );
     }
 
+    /**
+     * Bootstrap any application services.
+     */
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
         $this->registerRoutes();
-        $this->publishes([
-            __DIR__.'/../config/form.php' => config_path('form.php'),
-        ], 'form-config');
+
+        // Publish configuration file
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/form.php' => $this->app->configPath('form.php'),
+            ], 'form-config');
+        }
 
         if ($this->app['config']->get('form.auto_register', false)) {
             $this->autoRegisterForms();
@@ -52,8 +64,10 @@ class FormServiceProvider extends ServiceProvider
         $formService = $this->app->make(FormService::class);
 
         foreach ($directories as $directory) {
-            if (is_dir($directory)) {
-                $this->registerFormsInDirectory($directory, $formService);
+            // Convert config paths to full paths using Laravel's app_path helper
+            $fullPath = app_path($directory);
+            if (is_dir($fullPath)) {
+                $this->registerFormsInDirectory($fullPath, $formService);
             }
         }
     }
@@ -103,13 +117,15 @@ class FormServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        if (!$this->app->routesAreCached()) {
-            $this->app['router']->group([
+        $router = $this->app['router'];
+        
+        if (!$router->getRoutes()->hasNamedRoute('forms.list')) {
+            $router->group([
                 'prefix' => 'forms',
                 'as' => 'forms.',
                 'middleware' => ['web'],
             ], function ($router) {
-                $router->get('/list', [FormController::class, 'list'])->name('list');
+                $router->get('/list', [FormController::class, 'index'])->name('list');
                 $router->get('/{formName}', [FormController::class, 'getForm'])->name('get');
             });
         }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mk\Form;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Mk\Form\Contracts\FormContract;
 
@@ -36,7 +35,7 @@ abstract class Form implements FormContract
      * Configure the form properties.
      * Override this method in your form classes to set up the form.
      */
-    abstract protected function configure(): void;
+    abstract public function configure(): void;
 
     /**
      * Define the form fields.
@@ -143,8 +142,9 @@ abstract class Form implements FormContract
     /**
      * Handle the form submission.
      * Override this method in your form classes to handle form submission.
+     * @param \Illuminate\Http\Request|array $request The HTTP request or form data
      */
-    public function handle(Request $request): mixed
+    public function handle(mixed $request): mixed
     {
         return null;
     }
@@ -173,7 +173,11 @@ abstract class Form implements FormContract
     {
         $rules = [];
         foreach ($this->fields() as $field) {
-            $rules[$field->name] = $field->rules;
+            $fieldData = $field->toArray();
+            $name = $fieldData['name'] ?? null;
+            if ($name !== null) {
+                $rules[$name] = $fieldData['rules'] ?? [];
+            }
         }
         return $rules;
     }

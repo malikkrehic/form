@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Mk\Form\Contracts;
 
-use Illuminate\Http\Request;
-
 /**
  * Form Contract
  *
@@ -44,6 +42,11 @@ interface FormContract
     public function getConfiguration(): array;
 
     /**
+     * Get validation messages.
+     */
+    public function getMessages(): array;
+
+    /**
      * Get the form validation rules.
      */
     public function rules(): array;
@@ -55,6 +58,12 @@ interface FormContract
 
     /**
      * Handle the form submission.
+     * @param \Illuminate\Http\Request|array $request The HTTP request or form data
      */
-    public function handle(Request $request): mixed;
+    public function handle(mixed $request): mixed;
+
+    /**
+     * Get success messages.
+     */
+    public function getSuccessMessages(): array;
 }
