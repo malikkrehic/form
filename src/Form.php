@@ -15,6 +15,7 @@ use Mk\Form\Contracts\FormContract;
  */
 abstract class Form implements FormContract
 {
+    protected string $name = '';
     protected string $title = '';
     protected string $endpoint = '';
     protected string $method = 'POST';
@@ -27,6 +28,7 @@ abstract class Form implements FormContract
      */
     public function __construct()
     {
+        $this->setDefaultName();
         $this->setDefaultEndpoint();
         $this->configure();
     }
@@ -44,13 +46,31 @@ abstract class Form implements FormContract
     abstract public function fields(): array;
 
     /**
-     * Set the default endpoint based on the form class name.
+     * Set the default name based on the form class name.
+     */
+    protected function setDefaultName(): void
+    {
+        $className = class_basename($this);
+        $this->name = Str::kebab(Str::beforeLast($className, 'Form'));
+    }
+
+    /**
+     * Set the default endpoint based on the form name.
      */
     protected function setDefaultEndpoint(): void
     {
-        $className = class_basename($this);
-        $formName = Str::kebab(Str::beforeLast($className, 'Form'));
-        $this->endpoint = "/forms/{$formName}";
+        $this->endpoint = "/forms/{$this->name}";
+    }
+
+    /**
+     * Set the form name.
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        // Update endpoint when name changes
+        $this->setDefaultEndpoint();
+        return $this;
     }
 
     /**
@@ -87,6 +107,14 @@ abstract class Form implements FormContract
     {
         $this->configuration = $configuration;
         return $this;
+    }
+
+    /**
+     * Get the form name.
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -128,6 +156,7 @@ abstract class Form implements FormContract
     public function toArray(): array
     {
         return [
+            'name' => $this->name,
             'title' => $this->title,
             'endpoint' => $this->endpoint,
             'method' => $this->method,

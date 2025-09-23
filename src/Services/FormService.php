@@ -26,7 +26,7 @@ class FormService
      */
     public function registerForm(FormContract $form): void
     {
-        $this->forms[$this->getFormKey($form)] = $form;
+        $this->forms[$form->getName()] = $form;
     }
 
     /**
@@ -134,21 +134,11 @@ class FormService
 
     /**
      * Get the form key for registration.
+     * @deprecated Use $form->getName() directly instead
      */
     protected function getFormKey(FormContract $form): string
     {
-        $endpoint = $form->getEndpoint();
-
-        // Extract form name from endpoint (e.g., "/forms/create-user" -> "create-user")
-        $parts = explode('/', trim($endpoint, '/'));
-        if (count($parts) >= 2 && $parts[0] === 'forms') {
-            return $parts[1];
-        }
-
-        // Fallback to class name
-        $className = get_class($form);
-        $className = basename(str_replace('\\', '/', $className));
-        return strtolower(str_replace('Form', '', $className));
+        return $form->getName();
     }
 
     /**

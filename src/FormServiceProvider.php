@@ -127,6 +127,7 @@ class FormServiceProvider extends ServiceProvider
             ], function ($router) {
                 $router->get('/list', [FormController::class, 'index'])->name('list');
                 $router->get('/{formName}', [FormController::class, 'getForm'])->name('get');
+                $router->post('/{formName}', [FormController::class, 'submit'])->name('submit');
             });
         }
     }

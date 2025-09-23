@@ -44,11 +44,12 @@ class ContactForm extends Form
 {
     protected function configure(): void
     {
-        $this->setTitle('Contact Us')
-            ->setConfiguration([
-                'width' => 'max-w-2xl',
-                'submitLabel' => 'Send Message'
-            ]);
+        $this->setName('contact')  // Optional: defaults to kebab-case class name
+             ->setTitle('Contact Us')
+             ->setConfiguration([
+                 'width' => 'max-w-2xl',
+                 'submitLabel' => 'Send Message'
+             ]);
     }
 
     public function fields(): array
@@ -118,11 +119,13 @@ $formService->registerFormByClass(ContactForm::class);
 The package provides RESTful endpoints for your frontend to consume:
 
 #### List All Forms
+
 ```http
 GET /forms/list
 ```
 
 Response:
+
 ```json
 {
   "forms": {
@@ -142,11 +145,13 @@ Response:
 ```
 
 #### Get Form Details
+
 ```http
 GET /forms/{formName}
 ```
 
 Response:
+
 ```json
 {
   "title": "Contact Us",
@@ -195,6 +200,7 @@ Content-Type: application/json
 ## Available Field Types
 
 ### TextInputField
+
 ```php
 TextInputField::make('username')
     ->setLabel('Username')
@@ -205,6 +211,7 @@ TextInputField::make('username')
 ```
 
 ### TextareaField
+
 ```php
 TextareaField::make('description')
     ->setLabel('Description')
@@ -213,6 +220,7 @@ TextareaField::make('description')
 ```
 
 ### SelectField
+
 ```php
 SelectField::make('country')
     ->setLabel('Country')
@@ -224,6 +232,7 @@ SelectField::make('country')
 ```
 
 ### CheckboxField
+
 ```php
 CheckboxField::make('agree_terms')
     ->setLabel('I agree to the terms and conditions')
@@ -231,6 +240,7 @@ CheckboxField::make('agree_terms')
 ```
 
 ### NumberInputField
+
 ```php
 NumberInputField::make('age')
     ->setLabel('Age')
@@ -239,6 +249,7 @@ NumberInputField::make('age')
 ```
 
 ### FileUploadField
+
 ```php
 FileUploadField::make('avatar')
     ->setLabel('Profile Picture')
@@ -249,6 +260,7 @@ FileUploadField::make('avatar')
 ## Form Configuration
 
 ### Basic Configuration
+
 ```php
 protected function configure(): void
 {
@@ -263,6 +275,7 @@ protected function configure(): void
 ```
 
 ### Custom Endpoints
+
 ```php
 protected function configure(): void
 {
@@ -352,7 +365,7 @@ return [
 ## Requirements
 
 - PHP 8.3+
-- Laravel 11.0+
+- Laravel 12.0+
 - Composer
 
 ## License

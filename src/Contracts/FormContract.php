@@ -22,6 +22,11 @@ interface FormContract
     public function fields(): array;
 
     /**
+     * Get the form name.
+     */
+    public function getName(): string;
+
+    /**
      * Get the form title.
      */
     public function getTitle(): string;
