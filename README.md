@@ -53,6 +53,7 @@ use Mk\Form\Form;
 use Mk\Form\Fields\TextInputField;
 use Mk\Form\Fields\TextareaField;
 use Mk\Form\Fields\SelectField;
+use Mk\Form\Fields\DateField;
 
 class ContactForm extends Form
 {
@@ -433,6 +434,17 @@ NumberInputField::make('age')
     ->setLabel('Age')
     ->min(18)
     ->max(100);
+```
+
+### DateField
+
+```php
+DateField::make('birthdate')
+    ->setLabel('Date of Birth')
+    ->setRequired(true)
+    ->min('1900-01-01')
+    ->max('2024-12-31')
+    ->format('Y-m-d');
 ```
 
 ### FileUploadField
