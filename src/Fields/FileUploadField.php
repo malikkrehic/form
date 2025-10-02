@@ -49,4 +49,21 @@ class FileUploadField extends FormField
         $this->props['maxSize'] = $maxSize;
         return $this;
     }
+
+    /**
+     * Set configuration options for the file upload field.
+     */
+    public function setConfiguration(array $config): self
+    {
+        if (isset($config['accept'])) {
+            $this->accept($config['accept']);
+        }
+        if (isset($config['maxFileSize'])) {
+            $this->maxSize($config['maxFileSize'] * 1024); // Convert KB to bytes
+        }
+        if (isset($config['multiple'])) {
+            $this->multiple($config['multiple']);
+        }
+        return $this;
+    }
 }

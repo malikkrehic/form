@@ -33,6 +33,14 @@ class TextareaField extends FormField
     }
 
     /**
+     * Set the number of rows (alias for rows).
+     */
+    public function setRows(int $rows): self
+    {
+        return $this->rows($rows);
+    }
+
+    /**
      * Set the number of columns.
      */
     public function cols(int $cols): self

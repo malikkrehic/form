@@ -175,6 +175,14 @@ abstract class FormField implements FormFieldContract
     }
 
     /**
+     * Set help text (alias for setHelpText).
+     */
+    public function setHelp(string $helpText): self
+    {
+        return $this->setHelpText($helpText);
+    }
+
+    /**
      * Set a custom component.
      */
     public function component(string $component): self
