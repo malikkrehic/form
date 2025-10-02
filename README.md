@@ -20,10 +20,24 @@ A powerful Laravel form backend system with fluent API, validation, and HTTP end
 composer require mk/form
 ```
 
-### Step 2: Publish Configuration (Optional)
+### Step 2: Publish Assets (Optional)
+
+Publish the configuration file:
 
 ```bash
 php artisan vendor:publish --provider="Mk\Form\FormServiceProvider" --tag="form-config"
+```
+
+Publish a dedicated FormServiceProvider (recommended for larger apps):
+
+```bash
+php artisan vendor:publish --provider="Mk\Form\FormServiceProvider" --tag="form-provider"
+```
+
+Or publish everything:
+
+```bash
+php artisan vendor:publish --provider="Mk\Form\FormServiceProvider"
 ```
 
 ### Step 3: Register Forms
@@ -91,7 +105,87 @@ class ContactForm extends Form
 }
 ```
 
-Register your form in a service provider:
+## Form Registration
+
+The package provides **multiple convenient ways** to register your forms:
+
+### Method 1: Config File (Recommended)
+
+Add your forms to `config/form.php`:
+
+```php
+'forms' => [
+    App\Forms\ContactForm::class,
+    App\Forms\RegistrationForm::class,
+    App\Forms\CreateStoreForm::class,
+],
+```
+
+Forms listed here are automatically registered when the package boots.
+
+### Method 2: Fluent Registrar (Clean & Chainable)
+
+Use the `FormRegistrar` helper for a fluent registration experience:
+
+```php
+use Mk\Form\Support\FormRegistrar;
+use Mk\Form\Services\FormService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        FormRegistrar::make(app(FormService::class))
+            ->addClass(ContactForm::class)
+            ->addClass(RegistrationForm::class)
+            ->addClass(CreateStoreForm::class)
+            ->register();
+    }
+}
+```
+
+### Method 3: Bulk Registration
+
+Register multiple forms at once:
+
+```php
+use Mk\Form\Services\FormService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        app(FormService::class)->registerForms([
+            ContactForm::class,
+            RegistrationForm::class,
+            CreateStoreForm::class,
+        ]);
+    }
+}
+```
+
+### Method 4: Facade (Quick Access)
+
+Use the Form facade for quick access:
+
+```php
+use Mk\Form\Facades\Form;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        Form::registerForms([
+            ContactForm::class,
+            RegistrationForm::class,
+        ]);
+    }
+}
+```
+
+### Method 5: Individual Registration
+
+Register forms one at a time:
 
 ```php
 use Mk\Form\Services\FormService;
@@ -101,16 +195,109 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $formService = app(FormService::class);
+        
+        // By class name
+        $formService->registerFormByClass(ContactForm::class);
+        
+        // By instance
         $formService->registerForm(new ContactForm());
     }
 }
 ```
 
-Or register by class name:
+### Method 6: Namespace Registration
+
+Register all forms from a specific namespace and directory:
 
 ```php
-$formService->registerFormByClass(ContactForm::class);
+use Mk\Form\Services\FormService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        app(FormService::class)->registerFormsFromNamespace(
+            'App\\Forms',
+            app_path('Forms')
+        );
+    }
+}
 ```
+
+### Method 7: Dedicated Service Provider (Recommended for Large Apps)
+
+For better organization, create a dedicated `FormServiceProvider`:
+
+**Step 1:** Publish the service provider stub:
+
+```bash
+php artisan vendor:publish --provider="Mk\Form\FormServiceProvider" --tag="form-provider"
+```
+
+This creates `app/Providers/FormServiceProvider.php`:
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Mk\Form\Support\FormRegistrar;
+use Mk\Form\Services\FormService;
+
+class FormServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->registerForms();
+    }
+
+    protected function registerForms(): void
+    {
+        FormRegistrar::make(app(FormService::class))
+            ->addClass(\App\Forms\ContactForm::class)
+            ->addClass(\App\Forms\RegistrationForm::class)
+            ->addClass(\App\Forms\CreateStoreForm::class)
+            ->register();
+    }
+}
+```
+
+**Step 2:** Register the provider in `bootstrap/providers.php` (Laravel 11+):
+
+```php
+return [
+    App\Providers\AppServiceProvider::class,
+    App\Providers\FormServiceProvider::class, // Add this
+];
+```
+
+Or in `config/app.php` (Laravel 10 and below):
+
+```php
+'providers' => [
+    // ...
+    App\Providers\FormServiceProvider::class,
+],
+```
+
+**Benefits:**
+- Clean separation of concerns
+- All form registrations in one place
+- Easy to maintain and test
+- Doesn't clutter AppServiceProvider
+
+### Quick Comparison
+
+| Method | Best For | Setup Complexity | Maintainability |
+|--------|----------|------------------|-----------------|
+| Config File | Most apps | Low | ⭐⭐⭐⭐⭐ |
+| Dedicated Provider | Large apps | Medium | ⭐⭐⭐⭐⭐ |
+| Fluent Registrar | Clean code | Low | ⭐⭐⭐⭐ |
+| Bulk Registration | Quick setup | Low | ⭐⭐⭐⭐ |
+| Facade | Quick access | Low | ⭐⭐⭐⭐ |
+| Individual | Special cases | Low | ⭐⭐⭐ |
+| Namespace | Auto-discovery | Medium | ⭐⭐⭐⭐ |
 
 ## Usage
 
@@ -310,16 +497,18 @@ TextInputField::make('date')
 
 ## Auto-Registration
 
-Enable auto-registration in your configuration to automatically register forms from directories:
+Enable auto-registration in your configuration to automatically discover and register forms from directories:
 
 ```php
 // config/form.php
 'auto_register' => true,
 'directories' => [
-    app_path('Forms'),
-    app_path('Http/Forms'),
+    'app/Forms',
+    'app/Http/Forms',
 ],
 ```
+
+This will automatically scan the specified directories and register any classes ending with `Form.php` that implement `FormContract`.
 
 ## Testing
 

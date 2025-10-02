@@ -47,6 +47,63 @@ class FormService
     }
 
     /**
+     * Register multiple forms at once.
+     *
+     * @param array<FormContract|string> $forms Array of form instances or class names
+     */
+    public function registerForms(array $forms): void
+    {
+        foreach ($forms as $form) {
+            if (is_string($form)) {
+                $this->registerFormByClass($form);
+            } elseif ($form instanceof FormContract) {
+                $this->registerForm($form);
+            } else {
+                throw new \InvalidArgumentException(
+                    'Each form must be either a FormContract instance or a class name string.'
+                );
+            }
+        }
+    }
+
+    /**
+     * Register forms from a specific namespace.
+     *
+     * @param string $namespace The namespace to scan (e.g., 'App\\Forms')
+     * @param string $directory The directory path to scan
+     */
+    public function registerFormsFromNamespace(string $namespace, string $directory): void
+    {
+        if (!is_dir($directory)) {
+            throw new \InvalidArgumentException("Directory {$directory} does not exist.");
+        }
+
+        $files = glob($directory . '/*Form.php');
+
+        foreach ($files as $file) {
+            $className = $this->extractClassNameFromFile($file, $namespace);
+            
+            if ($className && class_exists($className)) {
+                try {
+                    $this->registerFormByClass($className);
+                } catch (\InvalidArgumentException $e) {
+                    // Skip forms that don't implement FormContract
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * Extract class name from file path.
+     */
+    protected function extractClassNameFromFile(string $file, string $namespace): ?string
+    {
+        $filename = basename($file, '.php');
+        return $namespace . '\\' . $filename;
+    }
+
+    /**
      * Get a form by name.
      */
     public function getForm(string $formName): FormContract

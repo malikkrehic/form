@@ -67,4 +67,18 @@ return [
         'app/Forms', 
         'app/Http/Forms',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registered Forms
+    |--------------------------------------------------------------------------
+    |
+    | Manually register forms by listing their class names here.
+    | These will be automatically registered when the package boots.
+    |
+    */
+    'forms' => [
+        // App\Forms\ContactForm::class,
+        // App\Forms\RegistrationForm::class,
+    ],
 ];

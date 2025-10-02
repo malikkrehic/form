@@ -48,11 +48,35 @@ class FormServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/form.php' => $this->app->configPath('form.php'),
             ], 'form-config');
+
+            // Publish FormServiceProvider stub
+            $this->publishes([
+                __DIR__.'/../stubs/FormServiceProvider.stub' => $this->app->basePath('app/Providers/FormServiceProvider.php'),
+            ], 'form-provider');
         }
 
+        // Register forms from config
+        $this->registerConfigForms();
+
+        // Auto-register forms from directories
         if ($this->app['config']->get('form.auto_register', false)) {
             $this->autoRegisterForms();
         }
+    }
+
+    /**
+     * Register forms from config file.
+     */
+    protected function registerConfigForms(): void
+    {
+        $forms = $this->app['config']->get('form.forms', []);
+        
+        if (empty($forms)) {
+            return;
+        }
+
+        $formService = $this->app->make(FormService::class);
+        $formService->registerForms($forms);
     }
 
     /**
@@ -65,7 +89,7 @@ class FormServiceProvider extends ServiceProvider
 
         foreach ($directories as $directory) {
             // Convert config paths to full paths using Laravel's app_path helper
-            $fullPath = app_path($directory);
+            $fullPath = $this->app->basePath($directory);
             if (is_dir($fullPath)) {
                 $this->registerFormsInDirectory($fullPath, $formService);
             }

@@ -1,0 +1,58 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use Mk\Form\Support\FormRegistrar;
+use Mk\Form\Services\FormService;
+
+/**
+ * Form Service Provider
+ *
+ * Register your application forms here.
+ * This provider is automatically loaded by Laravel.
+ */
+class FormServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void
+    {
+        $this->registerForms();
+    }
+
+    /**
+     * Register application forms.
+     */
+    protected function registerForms(): void
+    {
+        // Option 1: Using FormRegistrar (Fluent API)
+        FormRegistrar::make(app(FormService::class))
+            // ->addClass(\App\Forms\ContactForm::class)
+            // ->addClass(\App\Forms\RegistrationForm::class)
+            ->register();
+
+        // Option 2: Bulk Registration
+        // app(FormService::class)->registerForms([
+        //     \App\Forms\ContactForm::class,
+        //     \App\Forms\RegistrationForm::class,
+        // ]);
+
+        // Option 3: Namespace Registration (Auto-discover forms in a directory)
+        // app(FormService::class)->registerFormsFromNamespace(
+        //     'App\\Forms',
+        //     app_path('Forms')
+        // );
+    }
+}
