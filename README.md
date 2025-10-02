@@ -53,6 +53,7 @@ use Mk\Form\Form;
 use Mk\Form\Fields\TextInputField;
 use Mk\Form\Fields\TextareaField;
 use Mk\Form\Fields\SelectField;
+use Mk\Form\Fields\NumberField;
 use Mk\Form\Fields\DateField;
 
 class ContactForm extends Form
@@ -434,6 +435,28 @@ NumberInputField::make('age')
     ->setLabel('Age')
     ->min(18)
     ->max(100);
+```
+
+### NumberField
+
+```php
+NumberField::make('total_amount')
+    ->setLabel('Total Amount')
+    ->setRequired(false)
+    ->setPlaceholder('0.00')
+    ->setStep('0.01')
+    ->setMin(0)
+    ->setMax(10000);
+
+// Decimal with precision
+NumberField::make('price')
+    ->decimal(2)
+    ->positive();
+
+// Integer with range
+NumberField::make('quantity')
+    ->integer()
+    ->between(1, 100);
 ```
 
 ### DateField

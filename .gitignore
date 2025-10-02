@@ -3,4 +3,5 @@ old/*
 vendor
 vendor/*
 composer.lock
-.phpunit.cache
+.phpunit.cache/test-results
+.phpunit.cache/
