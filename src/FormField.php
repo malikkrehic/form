@@ -56,7 +56,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Static constructor.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = new static();
         $instance->name = $name;
@@ -67,7 +67,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the field name.
      */
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
         return $this;
@@ -76,7 +76,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the field label.
      */
-    public function setLabel(string $label): self
+    public function setLabel(string $label): static
     {
         $this->label = $label;
         return $this;
@@ -85,7 +85,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the field type.
      */
-    public function type(string $type): self
+    public function type(string $type): static
     {
         $this->type = $type;
         return $this;
@@ -94,7 +94,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set whether the field is required.
      */
-    public function setRequired(bool $required = true): self
+    public function setRequired(bool $required = true): static
     {
         $this->required = $required;
         return $this;
@@ -103,7 +103,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the validation rules.
      */
-    public function rules(array $rules): self
+    public function rules(array $rules): static
     {
         $this->rules = $rules;
         return $this;

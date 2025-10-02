@@ -10,6 +10,14 @@ use Mk\Form\FormField;
  * Number Field
  *
  * A number input field with min/max/step validation and decimal support.
+ *
+ * @method self setStep(string|float $step) Set the step value for increments
+ * @method self setMin(float $min) Set the minimum value
+ * @method self setMax(float $max) Set the maximum value
+ * @method self decimal(int $precision = 2) Set as decimal with precision
+ * @method self integer() Set as integer only
+ * @method self positive() Accept only positive numbers
+ * @method self between(float $min, float $max) Set min/max range
  */
 class NumberField extends FormField
 {
