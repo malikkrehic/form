@@ -3,3 +3,4 @@ old/*
 vendor
 vendor/*
 composer.lock
+.phpunit.cache
