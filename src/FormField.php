@@ -112,7 +112,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Handle options as array, associative array, or enum class string.
      */
-    public function setOptions(array|string $options): self
+    public function setOptions(array|string $options): static
     {
         // If $options is a string, check if it's an Enum class
         if (is_string($options)) {
@@ -150,7 +150,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the default value.
      */
-    public function setDefaultValue(mixed $value): self
+    public function setDefaultValue(mixed $value): static
     {
         $this->defaultValue = $value;
         return $this;
@@ -159,7 +159,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set the placeholder text.
      */
-    public function setPlaceholder(string $placeholder): self
+    public function setPlaceholder(string $placeholder): static
     {
         $this->placeholder = $placeholder;
         return $this;
@@ -168,7 +168,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set help text.
      */
-    public function setHelpText(string $helpText): self
+    public function setHelpText(string $helpText): static
     {
         $this->helpText = $helpText;
         return $this;
@@ -177,7 +177,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set help text (alias for setHelpText).
      */
-    public function setHelp(string $helpText): self
+    public function setHelp(string $helpText): static
     {
         return $this->setHelpText($helpText);
     }
@@ -185,7 +185,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set a custom component.
      */
-    public function component(string $component): self
+    public function component(string $component): static
     {
         $this->component = $component;
         return $this;
@@ -194,7 +194,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Set additional props.
      */
-    public function props(array $props): self
+    public function props(array $props): static
     {
         $this->props = array_merge($this->props, $props);
         return $this;
@@ -203,7 +203,7 @@ abstract class FormField implements FormFieldContract
     /**
      * Add a transformer for the field value.
      */
-    public function addTransformer(callable $transformer): self
+    public function addTransformer(callable $transformer): static
     {
         $this->transformers[] = $transformer;
         return $this;
