@@ -16,7 +16,7 @@ class TextareaField extends FormField
     /**
      * Create a new textarea field.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = parent::make($name);
         $instance->type('textarea');

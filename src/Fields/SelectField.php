@@ -16,7 +16,7 @@ class SelectField extends FormField
     /**
      * Create a new select field.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = parent::make($name);
         $instance->type('select');

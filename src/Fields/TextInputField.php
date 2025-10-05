@@ -16,7 +16,7 @@ class TextInputField extends FormField
     /**
      * Create a new text input field.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = parent::make($name);
         $instance->type('text');

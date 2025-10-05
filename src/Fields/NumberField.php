@@ -24,7 +24,7 @@ class NumberField extends FormField
     /**
      * Create a new number field.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = parent::make($name);
         $instance->type('number');

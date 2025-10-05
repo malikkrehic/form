@@ -16,7 +16,7 @@ class FileUploadField extends FormField
     /**
      * Create a new file upload field.
      */
-    public static function make(string $name): self
+    public static function make(string $name): static
     {
         $instance = parent::make($name);
         $instance->type('file');
